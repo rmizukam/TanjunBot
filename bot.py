@@ -25,7 +25,7 @@ client.load_modules('plugins.stratroulette')
 client.load_modules('plugins.sunnybot')
 client.load_modules('plugins.yourmomcounter')
 client.load_modules('plugins.summons')
-client.load_modules('plugins.completedEmbedsExample')
+client.load_modules('plugins.valbot')
 
 
 @component.with_command
