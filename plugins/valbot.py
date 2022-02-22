@@ -14,6 +14,7 @@ from hikari.embeds import Embed
 from hikari.messages import ButtonStyle
 import tanjun
 from tanjun.abc import SlashContext
+import random
 
 from hikari.events.message_events import GuildMessageCreateEvent
 from functions import embedStratChoice, unload_csv
@@ -35,8 +36,8 @@ dNamesArray = generalStratNameArray + defenseStratNameArray
 dStratArray = generalStrategiesArray + defenseStrategiesArray
 
 
-
 EMBED_MENU = {
+    '👨‍👩‍👧‍👦': {'title': 'Comp', 'style': ButtonStyle.SECONDARY},
     "⚔": {"title": "Attack", "style": ButtonStyle.SECONDARY},
     '🛡': {'title': 'Defense', 'style': ButtonStyle.SECONDARY},
     "🗺": {'title': 'Choose Map', 'style': ButtonStyle.SECONDARY},
@@ -45,7 +46,11 @@ EMBED_MENU = {
 
 component = tanjun.Component()
 
-embed = component.with_slash_command(tanjun.slash_command_group("embed", "Work with Embeds!", default_to_ephemeral=False))
+embed = component.with_slash_command(
+    tanjun.slash_command_group("embed",
+                               "Work with Embeds!",
+                               default_to_ephemeral=False)
+                                )
 
 
 @embed.with_command
@@ -57,8 +62,6 @@ async def valbot(
 ) -> None:
     building_embed = hikari.Embed(title="Choose Map")
     building_embed.add_field('Strat Roulette', value='strategy')
-    
-
     await embed_builder_loop(ctx, building_embed, bot=bot, client=client)
 
 
@@ -74,24 +77,38 @@ async def embed_builder_loop(
     client.metadata["text"] = ""
     client.metadata["pin"] = False
 
-    await ctx.edit_initial_response("Click/Tap your choice below.", embed=client.metadata['embed'], components=[*menu])
+    await ctx.edit_initial_response("Click/Tap your choice below",
+                                    embed=client.metadata['embed'],
+                                    components=[*menu]
+                                    )
     try:
-        async with bot.stream(InteractionCreateEvent, timeout=60).filter(('interaction.user.id', ctx.author.id)) as stream:
+        async with bot.stream(InteractionCreateEvent,
+                              timeout=60).filter(('interaction.user.id',
+                                                  ctx.author.id
+                                                  )
+                                                 ) as stream:
             async for event in stream:
                 key = event.interaction.custom_id
                 selected = EMBED_MENU[key]
                 if selected['title'] == "Cancel":
-                    await ctx.edit_initial_response(content=f"Exiting!", components=[])
+                    await ctx.edit_initial_response(content=f"Exiting!",
+                                                    components=[]
+                                                    )
                     return
 
                 await event.interaction.create_initial_response(
                     ResponseType.DEFERRED_MESSAGE_UPDATE,
                 )
 
-                await globals()[f"{selected['title'].lower().replace(' ', '_')}"](ctx, bot, client)
-                await ctx.edit_initial_response("Click/Tap your choice below, then watch the embed update!", embed=client.metadata['embed'], components=[*menu])
+                await globals()[f'''{selected['title'].lower().replace(' ',
+                                '_')}'''](ctx, bot, client)
+                await ctx.edit_initial_response("Click/Tap your choice below",
+                                                embed=client.metadata['embed'],
+                                                components=[*menu])
     except asyncio.TimeoutError:
-        await ctx.edit_initial_response("Waited for 60 seconds... Timeout.", embed=None, components=[])
+        await ctx.edit_initial_response("Waited for 60 seconds... Timeout.",
+                                        embed=None, components=[]
+                                        )
 
 
 def build_menu(ctx: SlashContext):
@@ -115,8 +132,13 @@ def build_menu(ctx: SlashContext):
     return menu
 
 
-async def choose_map(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
-    embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
+async def choose_map(ctx: SlashContext,
+                     bot: hikari.GatewayBot,
+                     client: tanjun.Client
+                     ):
+    embed_dict, *_ = bot.entity_factory.serialize_embed(
+        client.metadata['embed']
+        )
     await ctx.edit_initial_response(content="Set Map:", components=[])
     event = await collect_response(ctx)
     embed_dict['title'] = event.content[:200]
@@ -126,32 +148,79 @@ async def choose_map(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.C
     await event.message.delete()
 
 
-async def defense(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
-    embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
-    await ctx.edit_initial_response(content="You Chose Defense:", components=[])
+async def defense(ctx: SlashContext,
+                  bot: hikari.GatewayBot,
+                  client: tanjun.Client
+                  ):
+    embed_dict, *_ = bot.entity_factory.serialize_embed(
+        client.metadata['embed']
+        )
+    await ctx.edit_initial_response(components=[])
     global dcount, dNamesArray, dStratArray
-    nameRoll, stratRoll, dcount = embedStratChoice(dNamesArray, dStratArray, dcount)
+    nameRoll, stratRoll, dcount = embedStratChoice(dNamesArray,
+                                                   dStratArray,
+                                                   dcount
+                                                   )
     client.metadata['embed'].edit_field(0, nameRoll, stratRoll, inline=False)
-    await ctx.edit_initial_response(content="Good Luck!", embed=client.metadata['embed'], components=[])
+    await ctx.edit_initial_response(embed=client.metadata['embed'],
+                                    components=[]
+                                    )
 
 
-async def attack(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
-    embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
-    await ctx.edit_initial_response(content="You Chose Attack:", components=[])
+async def attack(ctx: SlashContext,
+                 bot: hikari.GatewayBot,
+                 client: tanjun.Client
+                 ):
+    embed_dict, *_ = bot.entity_factory.serialize_embed(
+        client.metadata['embed']
+        )
+    await ctx.edit_initial_response(components=[])
     global acount, aNamesArray, aStratArray
-    nameRoll, stratRoll, acount = embedStratChoice(aNamesArray, aStratArray, acount)
+    nameRoll, stratRoll, acount = embedStratChoice(aNamesArray,
+                                                   aStratArray,
+                                                   acount
+                                                   )
     client.metadata['embed'].edit_field(0, nameRoll, stratRoll, inline=False)
-    await ctx.edit_initial_response(content="Good Luck!", embed=client.metadata['embed'], components=[])
+    await ctx.edit_initial_response(embed=client.metadata['embed'],
+                                    components=[]
+                                    )
 
 
-async def collect_response(ctx: SlashContext, validator: list[str] | Callable | None = None, timeout: int = 60, timeout_msg: str = "Waited for 60 seconds... Timeout.") -> GuildMessageCreateEvent | None:
+async def comp(ctx: SlashContext,
+               bot: hikari.GatewayBot,
+               client: tanjun.Client
+               ):
+    embed_dict, *_ = bot.entity_factory.serialize_embed(
+        client.metadata['embed']
+        )
+    await ctx.edit_initial_response(components=[])
+    global agentsArray
+    composition = {random.choice(agentsArray)}
+    while len(composition) != 5:
+        composition.add(random.choice(agentsArray))
+        compo = ', '.join(composition)
+    client.metadata['embed'].edit_field(0, 'Composition', compo, inline=False)
+    await ctx.edit_initial_response(embed=client.metadata['embed'],
+                                    components=[]
+                                    )
+
+
+async def collect_response(ctx: SlashContext,
+                           validator: list[str] | Callable | None = None,
+                           timeout: int = 60,
+                           timeout_msg: str = '''Waited for 60 seconds...
+                                              Timeout.'''
+                           ) -> GuildMessageCreateEvent | None:
     def is_author(event: GuildMessageCreateEvent):
         if ctx.author == event.message.author:
             return True
         return False
     while True:
         try:
-            event = await ctx.client.events.wait_for(GuildMessageCreateEvent, predicate=is_author, timeout=timeout)
+            event = await ctx.client.events.wait_for(GuildMessageCreateEvent,
+                                                     predicate=is_author,
+                                                     timeout=timeout
+                                                     )
         except asyncio.TimeoutError:
             await ctx.edit_initial_response(timeout_msg)
             return None
@@ -163,10 +232,14 @@ async def collect_response(ctx: SlashContext, validator: list[str] | Callable | 
             return event
 
         elif isinstance(validator, list):
-            if any(valid_resp.lower() == event.content.lower() for valid_resp in validator):
+            if any(valid_resp.lower() == event.content.lower()
+                    for valid_resp in validator):
                 return event
             else:
-                validation_message = await ctx.respond(f"That wasn't a valid response... Expected one these: {' - '.join(validator)}")
+                validation_message = await ctx.respond(
+                    f'''That wasn't a valid response... Expected one these:
+                        {' - '.join(validator)}'''
+                    )
                 await asyncio.sleep(3)
                 await validation_message.delete()
 
@@ -175,7 +248,9 @@ async def collect_response(ctx: SlashContext, validator: list[str] | Callable | 
             if valid:
                 return event
             else:
-                validation_message = await ctx.respond("That doesn't look like a valid response... Try again?")
+                validation_message = await ctx.respond(
+                    "That doesn't look like a valid response... Try again?"
+                    )
                 await asyncio.sleep(3)
                 await validation_message.delete()
 
@@ -183,7 +258,9 @@ async def collect_response(ctx: SlashContext, validator: list[str] | Callable | 
             if validator(ctx, event):
                 return event
             else:
-                validation_message = await ctx.respond(f"Something about that doesn't look right... Try again?")
+                validation_message = await ctx.respond(
+                    f"Something about that doesn't look right... Try again?"
+                    )
                 await asyncio.sleep(3)
                 await validation_message.delete()
 
