@@ -1,4 +1,5 @@
 import asyncio
+from attr import field
 import hikari
 import tanjun
 
@@ -40,13 +41,15 @@ embed = component.with_slash_command(tanjun.slash_command_group("embed", "Work w
 
 
 @embed.with_command
-@tanjun.as_slash_command("interactive-post", f"Build an Embed!")
-async def interactive_post(
+@tanjun.as_slash_command("valbot", f"Build an Embed!")
+async def valbot(
     ctx: SlashContext,
     bot: hikari.GatewayBot = tanjun.injected(type=hikari.GatewayBot),
     client: tanjun.Client = tanjun.injected(type=tanjun.Client)
 ) -> None:
-    building_embed = hikari.Embed(title="New Embed")
+    building_embed = hikari.Embed(title="Strat Roulette",
+                                  description='Click/Tap your choice below.')
+    
 
     await embed_builder_loop(ctx, building_embed, bot=bot, client=client)
 
@@ -63,7 +66,7 @@ async def embed_builder_loop(
     client.metadata["text"] = ""
     client.metadata["pin"] = False
 
-    await ctx.edit_initial_response("Click/Tap your choice below, then watch the embed update!", embed=client.metadata['embed'], components=[*menu])
+    await ctx.edit_initial_response("Click/Tap your choice below.", embed=client.metadata['embed'], components=[*menu])
     try:
         async with bot.stream(InteractionCreateEvent, timeout=60).filter(('interaction.user.id', ctx.author.id)) as stream:
             async for event in stream:
@@ -104,19 +107,22 @@ def build_menu(ctx: SlashContext):
     return menu
 
 
-# async def title(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
-#     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
-#     await ctx.edit_initial_response(content="Set Title for embed:", components=[])
-#     try:
-#         async with bot.stream(hikari.GuildMessageCreateEvent, timeout=60).filter(('author', ctx.author)) as stream:
-#             async for event in stream:
-#                 embed_dict['title'] = event.content[:200]
-#                 client.metadata['embed'] = bot.entity_factory.deserialize_embed(embed_dict)
-#                 await ctx.edit_initial_response(content="Title updated!", embed=client.metadata['embed'], components=[])
-#                 await event.message.delete()
-#                 return
-#     except asyncio.TimeoutError:
-#         await ctx.edit_initial_response("Waited for 60 seconds... Timeout.", embed=None, components=[])
+async def attack(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
+    embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
+    global dcount, dNamesArray, dStratArray
+    roll, dcount = stratChoice(dNamesArray, dStratArray, dcount)
+    await ctx.edit_initial_response(content=roll, components=[])
+    try:
+        async with bot.stream(hikari.GuildMessageCreateEvent, timeout=60).filter(('author', ctx.author)) as stream:
+            async for event in stream:
+                embed_dict['title'] = event.content[:200]
+                client.metadata['embed'] = bot.entity_factory.deserialize_embed(embed_dict)
+                await ctx.edit_initial_response(content="Title updated!", embed=client.metadata['embed'], components=[])
+                await event.message.delete()
+                return
+    except asyncio.TimeoutError:
+        await ctx.edit_initial_response("Waited for 60 seconds... Timeout.", embed=None, components=[])
+
 
 async def defense(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
@@ -131,13 +137,13 @@ async def defense(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Clie
             return
 
 
-async def attack(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
-    embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
-    await ctx.edit_initial_response(content='Attack', components=[])
-    async with bot.stream(hikari.GuildMessageCreateEvent, timeout=60).filter(('author', ctx.author)) as stream:
-        global dcount, dNamesArray, dStratArray
-        roll, dcount = stratChoice(dNamesArray, dStratArray, dcount)
-        await ctx.respond(roll)
+# async def attack(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client):
+#     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata['embed'])
+#     await ctx.edit_initial_response(content='Attack', components=[])
+#     async with bot.stream(hikari.GuildMessageCreateEvent, timeout=60).filter(('author', ctx.author)) as stream:
+#         global dcount, dNamesArray, dStratArray
+#         roll, dcount = stratChoice(dNamesArray, dStratArray, dcount)
+#         await ctx.respond(roll)
 
 
 @ tanjun.as_loader
