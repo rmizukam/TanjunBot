@@ -48,6 +48,18 @@ async def random_player_selector(ctx: tanjun.abc.Context) -> None:
 async def attack_strat(ctx: tanjun.abc.Context) -> None:
     global acount, attackStratsArray, attackNamesArray
     roll, acount = stratChoice(attackNamesArray, attackStratsArray, acount)
+    if "($randplayer)" in roll:
+        roll = roll.replace("($randplayer)", random_player_selector())
+    await ctx.respond(roll)
+
+
+@component.with_slash_command
+@tanjun.as_slash_command('defense-strat', 'Strategy when playing attack')
+async def defense_strat(ctx: tanjun.abc.Context) -> None:
+    global dcount, attackStratsArray, attackNamesArray
+    roll, dcount = stratChoice(defenseNamesArray, defenseStratsArray, dcount)
+    if "($randplayer)" in roll:
+        roll = roll.replace("($randplayer)", random_player_selector())
     await ctx.respond(roll)
 
 
