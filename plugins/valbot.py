@@ -20,16 +20,20 @@ from hikari.events.message_events import GuildMessageCreateEvent
 from functions import embedStratChoice, unload_csv
 
 valMap = None
+mapList = ['Bind', 'Ascent', 'Icebox', 'Fracture', 'Split', 'Breeze', 'Haven']
 
 agentsArray = unload_csv('./dataFiles/agentlist.csv', 'Agent_Name')
-generalStratNameArray = unload_csv('./datafiles/GeneralStrats.csv', 'name')
+genNameSR = unload_csv('./datafiles/GeneralStrats.csv', 'name')
+genStratSR = unload_csv('./datafiles/GeneralStrats.csv', 'strat')
 attackStratNameArray = unload_csv('./dataFiles/AttackStrats.csv', 'name')
 defenseStratNameArray = unload_csv('./dataFiles/DefenseStrats.csv', 'name')
-generalStrategiesArray = unload_csv('./datafiles/GeneralStrats.csv', 'strat')
 attackStrategiesArray = unload_csv('./datafiles/AttackStrats.csv', 'strat')
 defenseStrategiesArray = unload_csv('./datafiles/DefenseStrats.csv', 'strat')
 dbindStrategiesArray = unload_csv('./dataFiles/dBindStrats.csv', 'strat')
 dbindNamesArray = unload_csv('./dataFiles/dBindStrats.csv', 'name')
+aStratHavenNameArray = unload_csv('./dataFiles/aHavenStrats.csv', 'name')
+aStratHavenStratArray = unload_csv('./dataFiles/aHavenStrats.csv', 'strat')
+
 
 EMBED_MENU = {
     "⚔": {"title": "Attack", "style": ButtonStyle.SECONDARY},
@@ -96,8 +100,8 @@ async def embed_builder_loop(
 
                     client.metadata['embed'].edit_field(
                             0,
-                            "*Turns on Coomer Miku Video*",
-                            'Valbot must recharge coom',
+                            "Valbot has emptied the coomtank",
+                            'visit twitch.tv/hyoon to refill',
                             inline=False
                         )
                     await ctx.edit_initial_response(
@@ -162,6 +166,14 @@ async def choose_map(
                                     )
     event = await collect_response(ctx)
     embed_dict['title'] = event.content[:200].lower().capitalize()
+    global mapList
+    while embed_dict['title'] not in mapList:
+        await ctx.edit_initial_response(
+                                    content="Invalid Map, Try Again:",
+                                    components=[]
+                                    )
+        event = await collect_response(ctx)
+        embed_dict['title'] = event.content[:200].lower().capitalize()
     client.metadata['embed'] = bot.entity_factory.deserialize_embed(embed_dict)
     global valMap
     valMap = embed_dict['title']
@@ -177,81 +189,81 @@ async def defense(
         client.metadata['embed']
         )
     await ctx.edit_initial_response(components=[])
-    global generalStratNameArray, generalStrategiesArray
+    global genNameSR, genStratSR
     global valMap, defenseStratNameArray, defenseStrategiesArray
     if valMap == "Bind":
         global dbindNamesArray, dbindStrategiesArray
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray +
                         dbindNamesArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray +
                         dbindStrategiesArray
                         )
     elif valMap == "Ascent":
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     elif valMap == "Haven":
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     elif valMap == "Split":
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     elif valMap == "Fracture":
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     elif valMap == "Icebox":
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     elif valMap == "Breeze":
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     else:
         dNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         defenseStratNameArray
                         )
         dStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         defenseStrategiesArray
                         )
     nameRoll, stratRoll = embedStratChoice(
@@ -279,78 +291,81 @@ async def attack(
             client.metadata['embed']
         )
     await ctx.edit_initial_response(components=[])
-    global generalStratNameArray, generalStrategiesArray
+    global genNameSR, genStratSR
     global valMap, attackStratNameArray, attackStrategiesArray
     if valMap == "Bind":
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     elif valMap == "Ascent":
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     elif valMap == "Haven":
+        global aStratHavenNameArray, aStratHavenStratArray
         aNamesArray = (
-                        generalStratNameArray +
-                        attackStratNameArray
+                        genNameSR +
+                        attackStratNameArray +
+                        aStratHavenNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
-                        attackStrategiesArray
+                        genStratSR +
+                        attackStrategiesArray +
+                        aStratHavenStratArray
                         )
     elif valMap == "Split":
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     elif valMap == "Fracture":
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     elif valMap == "Icebox":
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     elif valMap == "Breeze":
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     else:
         aNamesArray = (
-                        generalStratNameArray +
+                        genNameSR +
                         attackStratNameArray
                         )
         aStratArray = (
-                        generalStrategiesArray +
+                        genStratSR +
                         attackStrategiesArray
                         )
     nameRoll, stratRoll = embedStratChoice(
