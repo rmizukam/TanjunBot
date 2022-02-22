@@ -1,6 +1,6 @@
 "name","strat"
 "Wild West","Your whole team must only buy Sheriffs. Armor is allowed."
-"Follow the Leader","Elect a teammate to be the leader. Your whole team must move in a line everywhere that they travel following the leader. No one can stray from the line."
+"Follow the Leader","($randplayer) is your team leader. Your whole team must move in a line following the leader. No one can stray from the line."
 "Is That a Tornado?","Play the round normally; however, when you die you must constantly blow into your mic simulating a wind sound. Continue until round is over."
 "One at a Time","Only one player can leave spawn at a time. The rest of the team must do their best to hide in spawn."
 "Gun Swap","Every time you kill an enemy, you must pick up their gun and use it for your next kill at all costs."
