@@ -272,22 +272,77 @@ async def attack(
     global acount, generalStratNameArray, generalStrategiesArray
     global valMap, attackStratNameArray, attackStrategiesArray
     if valMap == "Bind":
-        aNamesArray = generalStratNameArray + attackStratNameArray
-        aStratArray = generalStrategiesArray + attackStrategiesArray
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     elif valMap == "Ascent":
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     elif valMap == "Haven":
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     elif valMap == "Split":
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     elif valMap == "Fracture":
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     elif valMap == "Icebox":
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     elif valMap == "Breeze":
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     else:
-        pass
+        aNamesArray = (
+                        generalStratNameArray +
+                        attackStratNameArray
+                        )
+        aStratArray = (
+                        generalStrategiesArray +
+                        attackStrategiesArray
+                        )
     nameRoll, stratRoll, acount = embedStratChoice(
             aNamesArray,
             aStratArray,
