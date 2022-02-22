@@ -16,7 +16,7 @@
 "Credit Limit","No player may spend more than the poorest player."
 "The Round of Applause","After every kill, players must stop to clap and cheer for 5 seconds in honor of the fine kill."
 "Alphabet Soup","Players must speak each key they press in real-time. Keys that are held down must be said repeatedly."
-"The One Gun","A Random player ($randplayer) may buy any gun. This is The One Gun. When not holding The One Gun, players may only use a classic or knife."
+"The One Gun","($randplayer) may buy any gun. This is The One Gun. When not holding The One Gun, players may only use a classic or knife."
 "Perfectly Clear Comms","Only one player may speak at a time. If two players speak over each other, they must both return to their spawn."
 "Locked Guns","Players must obtain an ult orb to use their guns."
 "Locked Abilities","Players must obtain an ult orb to use their abilities."
