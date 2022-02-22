@@ -19,8 +19,6 @@ import random
 from hikari.events.message_events import GuildMessageCreateEvent
 from functions import embedStratChoice, unload_csv
 
-acount = set()
-dcount = set()
 valMap = None
 
 agentsArray = unload_csv('./dataFiles/agentlist.csv', 'Agent_Name')
@@ -34,11 +32,11 @@ dbindStrategiesArray = unload_csv('./dataFiles/dBindStrats.csv', 'strat')
 dbindNamesArray = unload_csv('./dataFiles/dBindStrats.csv', 'name')
 
 EMBED_MENU = {
-    '👨‍👩‍👧‍👦': {'title': 'Comp', 'style': ButtonStyle.SECONDARY},
     "⚔": {"title": "Attack", "style": ButtonStyle.SECONDARY},
     '🛡': {'title': 'Defense', 'style': ButtonStyle.SECONDARY},
+    '👨‍👩‍👧‍👦': {'title': 'Comp', 'style': ButtonStyle.SECONDARY},
     "🗺": {'title': 'Choose Map', 'style': ButtonStyle.SECONDARY},
-    "❌": {"title": "Cancel", "style": ButtonStyle.DANGER}
+    "❌": {"title": "Exit", "style": ButtonStyle.DANGER}
 }
 
 component = tanjun.Component()
@@ -92,11 +90,19 @@ async def embed_builder_loop(
             async for event in stream:
                 key = event.interaction.custom_id
                 selected = EMBED_MENU[key]
-                if selected['title'] == "Cancel":
+                if selected['title'] == "Exit":
                     global valMap
                     valMap = None
+
+                    client.metadata['embed'].edit_field(
+                            0,
+                            "*Turns on Coomer Miku Video*",
+                            'Valbot must recharge coom',
+                            inline=False
+                        )
                     await ctx.edit_initial_response(
                             content="Exiting!",
+                            embed=client.metadata['embed'],
                             components=[]
                         )
                     return
@@ -171,7 +177,7 @@ async def defense(
         client.metadata['embed']
         )
     await ctx.edit_initial_response(components=[])
-    global dcount, generalStratNameArray, generalStrategiesArray
+    global generalStratNameArray, generalStrategiesArray
     global valMap, defenseStratNameArray, defenseStrategiesArray
     if valMap == "Bind":
         global dbindNamesArray, dbindStrategiesArray
@@ -248,11 +254,15 @@ async def defense(
                         generalStrategiesArray +
                         defenseStrategiesArray
                         )
-    nameRoll, stratRoll, dcount = embedStratChoice(
+    nameRoll, stratRoll = embedStratChoice(
             dNamesArray,
             dStratArray,
-            dcount
         )
+    if '($randplayer)' in stratRoll:
+        randPlayer = random.choice(
+            ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5']
+        )
+        stratRoll.replace('($randplayer)', randPlayer)
     client.metadata['embed'].edit_field(0, nameRoll, stratRoll, inline=False)
     await ctx.edit_initial_response(
             embed=client.metadata['embed'],
@@ -269,7 +279,7 @@ async def attack(
             client.metadata['embed']
         )
     await ctx.edit_initial_response(components=[])
-    global acount, generalStratNameArray, generalStrategiesArray
+    global generalStratNameArray, generalStrategiesArray
     global valMap, attackStratNameArray, attackStrategiesArray
     if valMap == "Bind":
         aNamesArray = (
@@ -343,11 +353,15 @@ async def attack(
                         generalStrategiesArray +
                         attackStrategiesArray
                         )
-    nameRoll, stratRoll, acount = embedStratChoice(
+    nameRoll, stratRoll = embedStratChoice(
             aNamesArray,
             aStratArray,
-            acount
         )
+    if '($randplayer)' in stratRoll:
+        randPlayer = random.choice(
+            ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5']
+        )
+        stratRoll = stratRoll.replace('($randplayer)', randPlayer)
     client.metadata['embed'].edit_field(0, nameRoll, stratRoll, inline=False)
     await ctx.edit_initial_response(
             embed=client.metadata['embed'],

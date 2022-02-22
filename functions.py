@@ -33,16 +33,11 @@ def stratChoice(name, strat, counter):
     return roll, counter
 
 
-def embedStratChoice(name, strat, counter):
+def embedStratChoice(name, strat):
     i = random.randrange(len(name))
-    if len(counter) == len(name):
-        counter = set()
-    while i in counter:
-        i = random.randrange(len(name))
-    counter.add(i)
     nameRoll = name[i]
     stratRoll = strat[i]
-    return nameRoll, stratRoll, counter
+    return nameRoll, stratRoll
 
 
 def incrTxt(file_name):
