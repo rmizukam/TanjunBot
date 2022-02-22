@@ -55,7 +55,7 @@ async def on_message_create(event: hikari.MessageCreateEvent):
                 if event.channel_id in NSFWChannels:
                     await event.message.respond(string)
                     await event.message.respond(img)
-                else: 
+                else:
                     await event.message.respond(string)
 
 
