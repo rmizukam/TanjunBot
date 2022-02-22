@@ -150,7 +150,7 @@ async def choose_map(
     embed_dict, *_ = bot.entity_factory.serialize_embed(
             client.metadata['embed']
         )
-    await ctx.edit_initial_response(   
+    await ctx.edit_initial_response(
                                     content="Type in chat to set map:",
                                     components=[]
                                     )
