@@ -25,6 +25,7 @@ client.load_modules('plugins.sunnybot')
 client.load_modules('plugins.yourmomcounter')
 client.load_modules('plugins.summons')
 client.load_modules('plugins.valbot')
+client.load_modules('plugins.boobaBot')
 
 
 @component.with_command
