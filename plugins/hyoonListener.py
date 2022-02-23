@@ -19,17 +19,9 @@ NSFWChannels = [int(os.getenv('SUMMONCHANNELKEY')),
 wayHyoon = ['hyn', 'hyba']
 henti = unload_csv('./dataFiles/h.csv', 'content')
 hyooba = unload_csv('./dataFiles/Hyooba.csv', 'content')
-# ahra = unload_csv('./dataFiles/Ahra.csv', 'content')
-# jinny = unload_csv('./dataFiles/Jinny.csv', 'content')
-# poki = unload_csv('./dataFiles/pokilinks.csv', 'content')
-# tenga = unload_csv('./dataFiles/tenga.csv', 'content')
 
 thenti = set()
 thyooba = set()
-# tahra = set()
-# tjinny = set()
-# tpoki = set()
-# ttenga = set()
 
 
 @component.with_listener(hikari.MessageCreateEvent)
