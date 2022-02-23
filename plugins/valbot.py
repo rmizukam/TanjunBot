@@ -88,8 +88,8 @@ async def embed_builder_loop(
                         timeout=300
                     ).filter(
                         (
-                            'interaction.user.id',
-                            ctx.author.id
+                            'interaction.channel_id',
+                            ctx.channel_id
                          )
                     ) as stream:
             async for event in stream:
