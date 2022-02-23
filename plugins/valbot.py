@@ -84,8 +84,9 @@ async def embed_builder_loop(
         )
     try:
         async with bot.stream(
-                    InteractionCreateEvent,
-                    timeout=60).filter(
+                        InteractionCreateEvent,
+                        timeout=300
+                    ).filter(
                         (
                             'interaction.user.id',
                             ctx.author.id
@@ -97,11 +98,17 @@ async def embed_builder_loop(
                 if selected['title'] == "Exit":
                     global valMap
                     valMap = None
-
+                    embed_dict, *_ = bot.entity_factory.serialize_embed(
+                            client.metadata['embed']
+                        )
+                    embed_dict['title'] = "Exiting"
+                    client.metadata['embed'] = (
+                            bot.entity_factory.deserialize_embed(embed_dict)
+                        )
                     client.metadata['embed'].edit_field(
                             0,
                             "Valbot has emptied the coomtank",
-                            'visit twitch.tv/hyoon to refill',
+                            'Visiting twitch.tv/hyoon to refill',
                             inline=False
                         )
                     await ctx.edit_initial_response(
@@ -125,7 +132,7 @@ async def embed_builder_loop(
                     )
     except asyncio.TimeoutError:
         await ctx.edit_initial_response(
-                "Waited for 60 seconds... Timeout.",
+                content="Waited for 5 Minutes... Timeout.",
                 embed=None,
                 components=[]
             )
@@ -167,13 +174,18 @@ async def choose_map(
     event = await collect_response(ctx)
     embed_dict['title'] = event.content[:200].lower().capitalize()
     global mapList
-    while embed_dict['title'] not in mapList:
-        await ctx.edit_initial_response(
-                                    content="Invalid Map, Try Again:",
-                                    components=[]
-                                    )
-        event = await collect_response(ctx)
-        embed_dict['title'] = event.content[:200].lower().capitalize()
+    condition = True
+    while condition:
+        if embed_dict['title'] not in mapList:
+            await event.message.delete()
+            await ctx.edit_initial_response(
+                                        content="Invalid Map, Try Again:",
+                                        components=[]
+                                        )
+            event = await collect_response(ctx)
+            embed_dict['title'] = event.content[:200].lower().capitalize()
+        else:
+            condition = False
     client.metadata['embed'] = bot.entity_factory.deserialize_embed(embed_dict)
     global valMap
     valMap = embed_dict['title']
@@ -408,8 +420,8 @@ async def comp(
 async def collect_response(
             ctx: SlashContext,
             validator: list[str] | Callable | None = None,
-            timeout: int = 60,
-            timeout_msg: str = "Waited for 60 seconds... Timeout."
+            timeout: int = 300,
+            timeout_msg: str = "Waited for 5 Minutes... Timeout."
         ) -> GuildMessageCreateEvent | None:
     def is_author(event: GuildMessageCreateEvent):
         if ctx.author == event.message.author:
@@ -423,7 +435,9 @@ async def collect_response(
                         timeout=timeout
                     )
         except asyncio.TimeoutError:
-            await ctx.edit_initial_response(timeout_msg)
+            await ctx.edit_initial_response(
+                        content=timeout_msg
+                    )
             return None
 
         if event.content == "❌":

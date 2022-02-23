@@ -52,11 +52,8 @@ async def on_message_create(event: hikari.MessageCreateEvent):
                 string = string + random.choice(['n', 'ba'])
                 global thyooba
                 img, thyooba = psudoRanChoice(hyooba, thyooba)
-                if event.channel_id in NSFWChannels:
-                    await event.message.respond(string)
-                    await event.message.respond(img)
-                else:
-                    await event.message.respond(string)
+                await event.message.respond(string)
+                await event.message.respond(img)
 
 
 @tanjun.as_loader
