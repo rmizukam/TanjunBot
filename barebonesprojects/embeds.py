@@ -67,9 +67,9 @@ async def interactive_post(ctx: SlashContext,
                 elif key == "📋":
                     await title(ctx, bot, client)
                 await ctx.edit_initial_response(
-                    initResp,
-                    embed=client.metadata['embed'],
-                    components=[row]
+                        initResp,
+                        embed=client.metadata['embed'],
+                        components=[row]
                     )
 
     except asyncio.TimeoutError:
