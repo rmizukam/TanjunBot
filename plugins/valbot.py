@@ -108,7 +108,7 @@ async def embed_builder_loop(
                             inline=False
                         )
                     client.metadata['embed'].set_image(
-                            'https://imgur.com/Te2Dxoe.png'
+                            'https://imgur.com/wdCXNYP.png'
                         )
                     await ctx.edit_initial_response(
                             content="Exiting!",
