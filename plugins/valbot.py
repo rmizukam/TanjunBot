@@ -17,7 +17,7 @@ from tanjun.abc import SlashContext
 import random
 
 from hikari.events.message_events import GuildMessageCreateEvent
-from functions import embedStratChoice, unload_csv
+from functions import embedStratChoice, unload_csv, psudoRanChoice
 
 valMap = None
 mapList = ['Bind', 'Ascent', 'Icebox', 'Fracture', 'Split', 'Breeze', 'Haven']
@@ -34,26 +34,22 @@ dbindNamesArray = unload_csv('./dataFiles/dBindStrats.csv', 'name')
 aStratHavenNameArray = unload_csv('./dataFiles/aHavenStrats.csv', 'name')
 aStratHavenStratArray = unload_csv('./dataFiles/aHavenStrats.csv', 'strat')
 
+thyooba = set()
+hyoobaArray = unload_csv('./dataFiles/Hyooba.csv', 'content')
 
 EMBED_MENU = {
     "⚔": {"title": "Attack", "style": ButtonStyle.SECONDARY},
     '🛡': {'title': 'Defense', 'style': ButtonStyle.SECONDARY},
     '👨‍👩‍👧‍👦': {'title': 'Comp', 'style': ButtonStyle.SECONDARY},
     "🗺": {'title': 'Choose Map', 'style': ButtonStyle.SECONDARY},
+    '🐐': {'title': 'Hyooba', 'style': ButtonStyle.SECONDARY},
     "❌": {"title": "Exit", "style": ButtonStyle.DANGER}
 }
 
 component = tanjun.Component()
 
-embed = component.with_slash_command(
-    tanjun.slash_command_group(
-                               "embed",
-                               "Work with Embeds!",
-                               default_to_ephemeral=False)
-                                    )
 
-
-@embed.with_command
+@component.with_command
 @tanjun.as_slash_command("valbot", "Build an Embed!")
 async def valbot(
     ctx: SlashContext,
@@ -110,6 +106,9 @@ async def embed_builder_loop(
                             "Valbot has emptied the coomtank",
                             'Visiting twitch.tv/hyoon to refill',
                             inline=False
+                        )
+                    client.metadata['embed'].set_image(
+                            'https://imgur.com/Te2Dxoe.png'
                         )
                     await ctx.edit_initial_response(
                             content="Exiting!",
@@ -288,6 +287,7 @@ async def defense(
         )
         stratRoll.replace('($randplayer)', randPlayer)
     client.metadata['embed'].edit_field(0, nameRoll, stratRoll, inline=False)
+    client.metadata['embed'].set_image(None)
     await ctx.edit_initial_response(
             embed=client.metadata['embed'],
             components=[]
@@ -390,6 +390,7 @@ async def attack(
         )
         stratRoll = stratRoll.replace('($randplayer)', randPlayer)
     client.metadata['embed'].edit_field(0, nameRoll, stratRoll, inline=False)
+    client.metadata['embed'].set_image(None)
     await ctx.edit_initial_response(
             embed=client.metadata['embed'],
             components=[]
@@ -411,6 +412,35 @@ async def comp(
         composition.add(random.choice(agentsArray))
         compo = ', '.join(composition)
     client.metadata['embed'].edit_field(0, 'Composition', compo, inline=False)
+    client.metadata['embed'].set_image(None)
+    await ctx.edit_initial_response(
+            embed=client.metadata['embed'],
+            components=[]
+        )
+
+
+async def hyooba(
+            ctx: SlashContext,
+            bot: hikari.GatewayBot,
+            client: tanjun.Client
+        ):
+    global thyooba
+    embed_dict, *_ = bot.entity_factory.serialize_embed(
+            client.metadata['embed']
+        )
+    x = random.randint(2, 100)
+    string = 'Hy'
+    for i in range(1, x+1):
+        string = string + 'o'
+    string = string + random.choice(['n', 'ba'])
+    embed_dict['title'] = string
+    img, thyooba = psudoRanChoice(hyoobaArray, thyooba)
+    client.metadata['embed'].set_image(img)
+    client.metadata['embed'].edit_field(0,
+                                        'hyoobalicious',
+                                        string,
+                                        inline=False
+                                        )
     await ctx.edit_initial_response(
             embed=client.metadata['embed'],
             components=[]
