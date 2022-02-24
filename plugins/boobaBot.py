@@ -1,10 +1,8 @@
 from __future__ import annotations
 import asyncio
 import logging
-
 from typing import Any, Callable
 from functools import partial
-
 import hikari
 from hikari.traits import EntityFactoryAware
 from hikari import InteractionCreateEvent
@@ -33,53 +31,15 @@ EMBED_MENU_FULL = EMBED_MENU | EMBED_OK
 
 component = tanjun.Component()
 
-henti = component.with_slash_command(
-    tanjun.slash_command_group("henti",
-                               "Work with Embeds! (Requires Can Embed)",
-                               default_to_ephemeral=False)
-    )
 
-
-# @henti.with_command
-# @tanjun.with_str_slash_option("message_id", "The Message Id to edit.")
-# @tanjun.as_slash_command("interactive-edit", f"Edit an Embed!")
-# async def interactive_edit(
-#     ctx: SlashContext,
-#     message_id: hikari.Message,
-#     bot: hikari.GatewayBot = tanjun.injected(type=hikari.GatewayBot),
-#     client: tanjun.Client = tanjun.injected(type=tanjun.Client)
-# ):
-#     message = None
-#     guild = ctx.get_guild()
-#     if not guild:
-#         return
-#     channels = guild.get_channels()
-
-#     for channel_id in channels:
-#         channel = guild.get_channel(channel_id)
-#         if not channel:
-#             continue
-#         if hasattr(channel, "fetch_message"):
-#             try:
-#                 message = await channel.fetch_message(message_id)
-#                 if message:
-#                     break
-#             except hikari.NotFoundError:
-#                 pass
-#     if not message:
-#         await ctx.respond("I couldn't find that message...")
-#         return
-#     await embed_builder_loop(ctx, message.embeds[0], bot=bot, client=client)
-
-
-@henti.with_command
+@component.with_command
 @tanjun.as_slash_command("boobabot", "booba!")
 async def booba_bot(
     ctx: SlashContext,
     bot: hikari.GatewayBot = tanjun.injected(type=hikari.GatewayBot),
     client: tanjun.Client = tanjun.injected(type=tanjun.Client)
 ) -> None:
-    building_embed = Embed(title="boobabot ready to coom")
+    building_embed = Embed(title="Booba Bot ready to coom")
 
     await embed_builder_loop(ctx, building_embed, bot=bot, client=client)
 
@@ -105,8 +65,8 @@ async def embed_builder_loop(
                     InteractionCreateEvent,
                     timeout=300
                 ).filter(
-                         ('interaction.user.id',
-                          ctx.author.id
+                         ('interaction.channel_id',
+                          ctx.channel_id
                           )
                          ) as stream:
             async for event in stream:
@@ -127,8 +87,7 @@ async def embed_builder_loop(
                     f'''{selected['title'].lower().replace(' ', '_')}'''
                     ](ctx, bot, client)
                 await ctx.edit_initial_response(
-                    '''Click/Tap your choice below,
-                       then watch the embed update!''',
+                    '''Click/Tap your choice below!''',
                     embed=client.metadata['embed'],
                     components=[*menu]
                     )
