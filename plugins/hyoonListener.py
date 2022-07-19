@@ -6,6 +6,8 @@ import random
 import os
 from functions import psudoRanChoice, unload_csv
 from dotenv import load_dotenv
+import re
+
 load_dotenv()
 
 
@@ -35,13 +37,17 @@ async def on_message_create(event: hikari.MessageCreateEvent):
                 img, thenti = psudoRanChoice(henti, thenti)
                 if event.channel_id in NSFWChannels:
                     await event.message.respond(img)
-            msg = msg.replace('o', '')
-            if any(phrase in msg for phrase in wayHyoon):
+            hyoonFound = re.search("hyoo+n", msg)
+            hyoobaFound = re.search("hyoo+ba", msg)
+            if hyoonFound or hyoobaFound:
                 x = random.randint(2, 100)
                 string = 'Hy'
                 for i in range(1, x+1):
                     string = string + 'o'
-                string = string + random.choice(['n', 'ba'])
+                if hyoonFound:
+                    string = string + 'n'
+                else:
+                    string = string + 'ba'
                 global thyooba
                 img, thyooba = psudoRanChoice(hyooba, thyooba)
                 await event.message.respond(string)
