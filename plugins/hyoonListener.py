@@ -37,9 +37,9 @@ async def on_message_create(event: hikari.MessageCreateEvent):
                 img, thenti = psudoRanChoice(henti, thenti)
                 if event.channel_id in NSFWChannels:
                     await event.message.respond(img)
-            hyoonFound = re.search("hyoo+n", msg)
-            hyoobaFound = re.search("hyoo+ba", msg)
-            tifaHyoonFound = re.search("ti+fa", msg)
+            hyoonFound = re.search(r"\bhyoo+n\b", msg)
+            hyoobaFound = re.search(r"\bhyoo+ba\b", msg)
+            tifaHyoonFound = re.search(r"\bti+fa\b", msg)
             if hyoonFound or hyoobaFound or tifaHyoonFound:
                 x = random.randint(2, 100)
                 string = 'Hy'

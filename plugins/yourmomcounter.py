@@ -4,6 +4,7 @@ import typing
 import tanjun
 import random
 import csv
+import re
 from functions import psudoRanChoice, unload_csv, incrTxt
 
 component = tanjun.Component()
@@ -18,7 +19,11 @@ async def on_message(event: hikari.MessageCreateEvent):
         mc = event.content
         if type(mc) == str:
             mc = mc.lower()
-            if mc in urmomma:
+            urMomFound = re.search(r"\bur mom\b", mc)
+                #r"" needed since \ is used
+            yourMomFound = re.search(r'\byour mom\b', mc)
+            yoMomFound = re.search(r"\byo mom\b", mc)
+            if urMomFound or yourMomFound or yoMomFound:
                 with open(pathmomtxt, 'r') as f:
                     count = str(int(f.read()) + 1)
                 with open(pathmomtxt, 'w') as f:
@@ -26,31 +31,6 @@ async def on_message(event: hikari.MessageCreateEvent):
                 await event.message.respond(
                     '\"Your mom\" has been said ' + count + ' times.'
                 )
-            elif mc.endswith('your mom') or mc.endswith(' ur mom'):
-                with open(pathmomtxt, 'r') as f:
-                    count = str(int(f.read()) + 1)
-                with open(pathmomtxt, 'w') as f:
-                    f.write(count)
-                await event.message.respond(
-                    '\"Your mom\" has been said ' + count + ' times.'
-                )
-            elif (mc.find('ur mom') != -1 and
-                  mc.endswith('your mom') is not True and
-                  mc.endswith(' ur mom') is not True
-                  ):
-                charA = mc[mc.find('mom') + 3]
-                charB4Y = mc[mc.find('mom') - 6]
-                charB4u = mc[mc.find('mom') - 4]
-                if charA == "'" or charA == 's' or charA.isspace():
-                    if charB4Y.isspace() or charB4u.isspace():
-                        with open(pathmomtxt, 'r') as f:
-                            count = str(int(f.read()) + 1)
-                        with open(pathmomtxt, 'w') as f:
-                            f.write(count)
-                        await event.message.respond(
-                            '\"Your mom\" has been said ' + count + ' times.'
-                            )
-
 
 @tanjun.as_loader
 def load_module(client: tanjun.abc.Client) -> None:
