@@ -58,7 +58,7 @@ async def on_message_create(event: hikari.MessageCreateEvent):
 @component.with_slash_command
 @tanjun.as_slash_command(
                          'hyoomer-1', 'Legendary Red Hyooba',
-                         default_to_ephemeral=True
+                         default_to_ephemeral=False
         )
 async def hyoomer_1(ctx: tanjun.abc.SlashContext) -> None:
     with open('./dataFiles/redHyoomer.png', 'rb') as fh:
