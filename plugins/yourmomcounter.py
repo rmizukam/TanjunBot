@@ -21,8 +21,8 @@ async def on_message(event: hikari.MessageCreateEvent):
             mc = mc.lower()
             urMomFound = re.search(r"\bur mom\b", mc)
                 #r"" needed since \ is used
-            yourMomFound = re.search('your mom', mc)
-            yoMomFound = re.search(r"yo mom", mc)
+            yourMomFound = re.search(r'\byour mom\b', mc)
+            yoMomFound = re.search(r"\byo mom\b", mc)
             if urMomFound or yourMomFound or yoMomFound:
                 with open(pathmomtxt, 'r') as f:
                     count = str(int(f.read()) + 1)
