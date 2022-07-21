@@ -69,21 +69,26 @@ async def on_message_create(event: hikari.MessageCreateEvent):
 
 @component.with_slash_command
 @tanjun.as_slash_command(
-                         'hyoomer-1', 'Legendary Red Hyooba',
+                         'hyoomer-1',
+                         'Legendary Red Hyooba',
                          default_to_ephemeral=False
-        )
+                        )
 async def hyoomer_1(ctx: tanjun.abc.SlashContext) -> None:
     with open('./dataFiles/redHyoomer.png', 'rb') as fh:
         f = hikari.File('./dataFiles/redHyoomer.png')
     await ctx.respond('You Coomer')
     await ctx.respond(f)
 
+@component.with_slash_command
+@tanjun.as_slash_command(
+                         'hyoomer-2',
+                         'Wild White Hyooba'
+                        )
 async def hyoomer_2(ctx: tanjun.abc.SlashContext) -> None:
     with open('./dataFiles/whiteHyoomer.png', 'rb') as fh:
         f = hikari.File('./dataFiles/whiteHyoomer.png')
     await ctx.respond('COOMER')
     await ctx.respond(f)
-
 
 
 @tanjun.as_loader
