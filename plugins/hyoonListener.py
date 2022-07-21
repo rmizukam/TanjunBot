@@ -21,7 +21,7 @@ NSFWChannels = [int(os.getenv('SUMMONCHANNELKEY')),
 wayHyoon = ['hyn', 'hyba']
 henti = unload_csv('./dataFiles/h.csv', 'content')
 hyooba = unload_csv('./dataFiles/Hyooba.csv', 'content')
-hyoofa = unload_csv('./dataFile/Hyoofa.csv', 'content')
+hyoofa = unload_csv('./dataFiles/Hyoofa.csv', 'content')
 
 thenti = set()
 thyooba = set()
@@ -81,6 +81,7 @@ async def hyoomer_2(ctx: tanjun.abc.SlashContext) -> None:
         f = hikari.File('./dataFiles/whiteHyoomer.png')
     await ctx.respond('COOMER')
     await ctx.respond(f)
+
 
 
 @tanjun.as_loader
