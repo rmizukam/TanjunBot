@@ -59,7 +59,8 @@ async def on_message_create(event: hikari.MessageCreateEvent):
                 x = random.randint(2, 100)
                 string = 'Hy'
                 for i in range(1, x+1):
-                    string = string + 'ofa'
+                    string = string + 'o'
+                string = string + 'fa'
                 global thyoofa
                 img, thyoofa = psudoRanChoice(hyoofa, thyoofa)
                 await event.message.respond(string)
