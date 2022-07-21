@@ -21,6 +21,7 @@ NSFWChannels = [int(os.getenv('SUMMONCHANNELKEY')),
 wayHyoon = ['hyn', 'hyba']
 henti = unload_csv('./dataFiles/h.csv', 'content')
 hyooba = unload_csv('./dataFiles/Hyooba.csv', 'content')
+hyoofa = unload_csv('./dataFile/Hyoofa.csv', 'content')
 
 thenti = set()
 thyooba = set()
@@ -40,7 +41,7 @@ async def on_message_create(event: hikari.MessageCreateEvent):
             hyoonFound = re.search(r"\bhyoo+n\b", msg)
             hyoobaFound = re.search(r"\bhyoo+ba\b", msg)
             tifaHyoonFound = re.search(r"\bti+fa\b", msg)
-            if hyoonFound or hyoobaFound or tifaHyoonFound:
+            if hyoonFound or hyoobaFound:
                 x = random.randint(2, 100)
                 string = 'Hy'
                 for i in range(1, x+1):
@@ -51,6 +52,15 @@ async def on_message_create(event: hikari.MessageCreateEvent):
                     string = string + 'ba'
                 global thyooba
                 img, thyooba = psudoRanChoice(hyooba, thyooba)
+                await event.message.respond(string)
+                await event.message.respond(img)
+            elif tifaHyoonFound:
+                x = random.randint(2, 100)
+                string = 'Hy'
+                for i in range(1, x+1):
+                    string = string + 'ofa'
+                global thyoofa
+                img, thyoofa = psudoRanChoice(hyoofa, thyoofa)
                 await event.message.respond(string)
                 await event.message.respond(img)
 
@@ -64,6 +74,12 @@ async def hyoomer_1(ctx: tanjun.abc.SlashContext) -> None:
     with open('./dataFiles/redHyoomer.png', 'rb') as fh:
         f = hikari.File('./dataFiles/redHyoomer.png')
     await ctx.respond('You Coomer')
+    await ctx.respond(f)
+
+async def hyoomer_2(ctx: tanjun.abc.SlashContext) -> None:
+    with open('./dataFiles/whiteHyoomer.png', 'rb') as fh:
+        f = hikari.File('./dataFiles/whiteHyoomer.png')
+    await ctx.respond('COOMER')
     await ctx.respond(f)
 
 
