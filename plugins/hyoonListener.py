@@ -25,6 +25,7 @@ hyoofa = unload_csv('./dataFiles/Hyoofa.csv', 'content')
 
 thenti = set()
 thyooba = set()
+thyoofa = set()
 
 
 @component.with_listener(hikari.MessageCreateEvent)
